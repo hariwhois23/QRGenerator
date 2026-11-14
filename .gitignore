@@ -17,7 +17,8 @@ ENV/
 # Local database and generated uploads
 db.sqlite3
 db.sqlite3-journal
-/media/
+/media/*
+!/media/.gitkeep
 /staticfiles/
 
 # Editor and OS files
