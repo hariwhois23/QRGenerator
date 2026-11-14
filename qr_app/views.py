@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 from .forms import QRCodeForm
 import qrcode
 import os
@@ -8,12 +7,12 @@ from django.conf import settings
 
 
 def generate_qr_code(request):
-    
+    form = QRCodeForm(request.POST if request.method == 'POST' else None)
+
     if request.method == 'POST':
-        form_data = QRCodeForm(request.POST)
-        if form_data.is_valid():
-            res_name = form_data.cleaned_data['restaurant_name']
-            menu_url = form_data.cleaned_data['menu_url']
+        if form.is_valid():
+            res_name = form.cleaned_data['restaurant_name']
+            menu_url = form.cleaned_data['menu_url']
             
             file_name = res_name.replace(" ", "_").lower() + "_qr.png";
             restaurant_name = res_name.replace(" ", "").lower()
@@ -40,12 +39,5 @@ def generate_qr_code(request):
                         }
             
             return render(request, 'qr_result.html', context)
-        
-    else:     
-        form = QRCodeForm()
-        context = {
-            "form" : form
-        }
-        
-        return render(request, 'generate_qr_code.html',context)
-    
+
+    return render(request, 'generate_qr_code.html', {"form": form})
